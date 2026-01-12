@@ -8,6 +8,9 @@ from litellm import completion
 from multiprocessing import Pool
 from tenacity import retry, wait_exponential
 
+import litellm
+litellm._turn_on_debug()
+
 
 load_dotenv(override=True)
 
@@ -15,7 +18,8 @@ MODEL = "openai/gpt-4.1-nano"
 
 DB_NAME = str(Path(__file__).parent.parent / "preprocessed_db")
 collection_name = "docs"
-embedding_model = "text-embedding-3-large"
+# embedding_model = "text-embedding-3-large"
+embedding_model = "llama3.2"
 KNOWLEDGE_BASE_PATH = Path(__file__).parent.parent / "knowledge-base"
 AVERAGE_CHUNK_SIZE = 100
 wait = wait_exponential(multiplier=1, min=10, max=240)
@@ -23,7 +27,7 @@ wait = wait_exponential(multiplier=1, min=10, max=240)
 
 WORKERS = 3
 
-openai = OpenAI()
+openai = OpenAI(base_url="http://localhost:11434", api_key="ollama")
 
 
 class Result(BaseModel):
